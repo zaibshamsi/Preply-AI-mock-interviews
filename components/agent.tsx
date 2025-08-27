@@ -7,8 +7,8 @@ enum CallStatus {
     ACTIVE = "ACTIVE",
     FINISHED = "FINISHED",
 }
-const Agent = ({userName}:AgentProps) => {
-    const callStatus = CallStatus.FINISHED;
+const  Agent = ({userName}:AgentProps) => {
+    const callStatus = CallStatus.ACTIVE;
     const isSpeaking = true;
     const messages = [
         'Whats your name',
@@ -69,4 +69,5 @@ const Agent = ({userName}:AgentProps) => {
         </>
     )
 }
-export default Agent
+
+export  default Agent;
