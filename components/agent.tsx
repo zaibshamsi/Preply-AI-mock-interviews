@@ -6,6 +6,7 @@ import {useRouter} from "next/navigation";
 import {useEffect, useState} from "react";
 import { Vapi } from '@/lib/vapi.sdk';
 
+
 enum CallStatus {
     INACTIVE = "INACTIVE",
     CONNECTING = "CONNECTING",
@@ -35,24 +36,24 @@ const  Agent = ({userName, userId, type}:AgentProps) => {
                 setMessages((prev) => [...prev, newMessage]);
             }
         }
-        const onSpeachStart = () => setIsSpeaking(true);
-        const onSpeachEnd = () => setIsSpeaking(false);
+        const onSpeechStart = () => setIsSpeaking(true);
+        const onSpeechEnd = () => setIsSpeaking(false);
 
         const onError = (error:Error) => console.log('Error', error)
 
         Vapi.on('call-start', onCallStart);
         Vapi.on('call-end', onCallEnd);
         Vapi.on('message', onMessage);
-        Vapi.on('speech-start', onSpeachStart);
-        Vapi.on('speech-end', onSpeachEnd);
+        Vapi.on('speech-start', onSpeechStart);
+        Vapi.on('speech-end', onSpeechEnd);
         Vapi.on('error', onError);
 
         return () => {
             Vapi.off('call-start', onCallStart);
             Vapi.off('call-end', onCallEnd);
             Vapi.off('message', onMessage);
-            Vapi.off('speech-start', onSpeachStart);
-            Vapi.off('speech-end', onSpeachEnd);
+            Vapi.off('speech-start', onSpeechStart);
+            Vapi.off('speech-end', onSpeechEnd);
             Vapi.off('error', onError);
         }
 
@@ -66,12 +67,18 @@ const  Agent = ({userName, userId, type}:AgentProps) => {
     const handleCall = async () => {
         setCallStatus(CallStatus.CONNECTING);
 
-        await Vapi.start(process.env.NEXT_PUBLIC_VAPI_WORKFLOW_ID!, {
-            variableValues: {
-                username: userName,
-                userid: userId,
+        await Vapi.start(
+            null,                               // assistant object
+            null,                               // assistantId
+            null,                               // callId to resume
+            process.env.NEXT_PUBLIC_VAPI_WORKFLOW_ID!, // <<< workflowId
+            {
+                variableValues: {                 // NOT "metadata"
+                    username: userName,
+                    userid: userId,
+                },
             }
-        })
+        );
     }
 
     const handleDisconnect = () => {
